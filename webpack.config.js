@@ -14,7 +14,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js'
+    // filename changes after any change is made to either the bundle or vendor
+    filename: '[name].[chunkhash].js'
   },
   module: {
     rules: [
@@ -33,7 +34,10 @@ module.exports = {
   plugins: [
     // ensures that vendor files are only loaded from vendor instead of bundle.
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor'
+      // a third javascript file is created in the /dist directory
+      // the purpose of this file is to better tell the browser
+      // whether or not the vendor file got changed 
+      names: ['vendor', 'manifest'],
     }),
     // obsolete the need to manually replace script tags inside index.html
     new HtmlWebpackPlugin({
